@@ -33,23 +33,24 @@
             console.log("IP Address:", ipAddress);  
             console.log("Country:", country);  
 
-            // Check if the IP is blocked  
+            // Block IP addresses
             if (blockedIPs.includes(ipAddress)) {
                 console.log("Blocked IP detected:", ipAddress);
-                window.location.href = "https://amazon.com"; // Redirect to Google for blocked IPs  
+                window.location.replace("https://amazon.com"); // Redirect immediately without delay
                 return;
             }
 
             // Check if the country is allowed
             if (allowedCountries.includes(country)) {    
                 console.log("Access allowed for country:", country);    
-                window.location.href = "https://ovh.com"; // Redirect to the offer for allowed countries  
+                window.location.replace("https://ovh.com"); // Redirect to the offer for allowed countries
             } else {    
                 console.log("Access denied for country:", country);    
-                window.location.href = "https://amazon.com"; // Redirect to Google for other countries  
+                window.location.replace("https://amazon.com"); // Redirect to Google for other countries
             }
         }).fail(function(error) {  
             console.error('Error:', error);  
+            window.location.replace("https://amazon.com"); // If there's an error, redirect to Google
         });
     </script>
 </head>
