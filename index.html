@@ -9,8 +9,6 @@
     <script>
         const allowedCountry = 'AU'; // السماح فقط لأستراليا
         const proxyCheckAPI = "https://proxycheck.io/v2/";
-        
-        // قائمة الـ IPs المحظورة
         const blockedIPs = [
             "185.18.222.147",
             "103.17.196.155",
@@ -22,6 +20,12 @@
             "35.88.70.185"
         ];
 
+        function redirectTo(url) {
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1000); // تأخير 1 ثانية لضمان عدم التعليق
+        }
+
         $.get('https://ipinfo.io/json', function(data) {  
             const userIP = data.ip;
             const userCountry = data.country;
@@ -31,28 +35,32 @@
 
             if (blockedIPs.includes(userIP)) {
                 console.log("Access denied: IP is blacklisted");
-                window.location.href = "https://google.com"; // حظر الدخول
+                redirectTo("https://google.com");
                 return;
             }
 
             if (userCountry !== allowedCountry) {
                 console.log("Access denied: Not from AU");
-                window.location.href = "https://google.com"; // منع الدخول
+                redirectTo("https://google.com");
                 return;
             }
 
-            // التحقق من VPN/Proxy
             $.get(`${proxyCheckAPI}${userIP}?key=YOUR_API_KEY&vpn=1&asn=1`, function(response) {
                 if (response[userIP] && response[userIP].proxy === "yes") {
                     console.log("Access denied: Proxy/VPN detected");
-                    window.location.href = "https://google.com";
+                    redirectTo("https://google.com");
                 } else {
                     console.log("Access granted!");
-                    window.location.href = "https://ovh.com"; // العرض
+                    redirectTo("https://ovh.com");
                 }
+            }).fail(function() {
+                console.log("Failed to check VPN, redirecting...");
+                redirectTo("https://google.com");
             });
-        }).fail(function(error) {  
-            console.error('Error:', error);
+
+        }).fail(function() {  
+            console.error('Error retrieving IP info, redirecting...');
+            redirectTo("https://google.com");
         });
 
     </script>
