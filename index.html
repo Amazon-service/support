@@ -3,68 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check Access</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
+    <title>work</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js" integrity="sha512-cEgdeh0IWe1pUYypx4mYPjDxGB/tyIORwjxzKrnoxcif2ZxI7fw81pZWV0lGnPWLrfIHGA7qc964MnRjyCYmEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        const allowedCountry = 'AU'; // السماح فقط لأستراليا
-        const proxyCheckAPI = "https://proxycheck.io/v2/";
+        // Define the allowed countries (ISO 3166-1 alpha-2 country codes)
+        const allowedCountries = ['AU']; // Only allow Australia (AU)
+
+        // Define blocked IP addresses
         const blockedIPs = [
             "185.18.222.147",
             "103.17.196.155",
             "198.44.133.53",
             "138.199.22.183",
             "106.161.65.206",
+            "185.18.222.147",
+            "103.17.196.155",
+            "198.44.133.53",
             "54.200.5.221",
             "35.89.14.236",
+            "104.210.79.75",
             "35.88.70.185"
         ];
 
-        function redirectTo(url) {
-            setTimeout(() => {
-                window.location.href = url;
-            }, 1000); // تأخير 1 ثانية لضمان عدم التعليق
-        }
-
         $.get('https://ipinfo.io/json', function(data) {  
-            const userIP = data.ip;
-            const userCountry = data.country;
+            const ipAddress = data.ip;  // Extract the IP address  
+            const country = data.country;  // Extract the country code  
 
-            console.log("User IP:", userIP);
-            console.log("User Country:", userCountry);
+            console.log("IP Address:", ipAddress);  
+            console.log("Country:", country);  
 
-            if (blockedIPs.includes(userIP)) {
-                console.log("Access denied: IP is blacklisted");
-                redirectTo("https://google.com");
+            // Check if the IP is blocked  
+            if (blockedIPs.includes(ipAddress)) {
+                console.log("Blocked IP detected:", ipAddress);
+                window.location.href = "https://amazon.com"; // Redirect to Google for blocked IPs  
                 return;
             }
 
-            if (userCountry !== allowedCountry) {
-                console.log("Access denied: Not from AU");
-                redirectTo("https://google.com");
-                return;
+            // Check if the country is allowed
+            if (allowedCountries.includes(country)) {    
+                console.log("Access allowed for country:", country);    
+                window.location.href = "https://ovh.com"; // Redirect to the offer for allowed countries  
+            } else {    
+                console.log("Access denied for country:", country);    
+                window.location.href = "https://amazon.com"; // Redirect to Google for other countries  
             }
-
-            $.get(`${proxyCheckAPI}${userIP}?key=YOUR_API_KEY&vpn=1&asn=1`, function(response) {
-                if (response[userIP] && response[userIP].proxy === "yes") {
-                    console.log("Access denied: Proxy/VPN detected");
-                    redirectTo("https://google.com");
-                } else {
-                    console.log("Access granted!");
-                    redirectTo("https://ovh.com");
-                }
-            }).fail(function() {
-                console.log("Failed to check VPN, redirecting...");
-                redirectTo("https://google.com");
-            });
-
-        }).fail(function() {  
-            console.error('Error retrieving IP info, redirecting...');
-            redirectTo("https://google.com");
+        }).fail(function(error) {  
+            console.error('Error:', error);  
         });
-
     </script>
 </head>
 <body>
+
 </body>
 </html>
